@@ -69,4 +69,67 @@ export default function SetupUIDDialog({ onClose, onSuccess }) {
               ? "Update your student UID to sync with your timetable" 
               : "Enter your college student UID to automatically load your schedule"}
           </DialogDescription>
- 
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {currentUID && (
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-xs text-blue-900 mb-1">Current UID:</p>
+              <p className="text-sm font-semibold text-blue-900">{currentUID}</p>
+            </div>
+          )}
+
+          <div>
+            <Label htmlFor="uid">Student UID</Label>
+            <Input
+              id="uid"
+              type="text"
+              value={uid}
+              onChange={(e) => setUid(e.target.value)}
+              placeholder="e.g., 21BCS1234"
+              required
+              className="mt-1"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Enter your university student identification number
+            </p>
+          </div>
+
+          {error && (
+            <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
+
+          {currentUID && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-xs text-amber-900">
+                ⚠️ <strong>Note:</strong> Changing your UID will affect which classes are displayed in your schedule
+              </p>
+            </div>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={isSubmitting || !uid.trim()}
+              className="flex-1 bg-purple-600 hover:bg-purple-700"
+            >
+              {isSubmitting ? "Saving..." : currentUID ? "Update UID" : "Save UID"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
