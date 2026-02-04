@@ -69,4 +69,99 @@ export default function AddClassDialog({ userEmail, studentUID, onClose, onSucce
               <Label>Day</Label>
               <Select
                 value={formData.day_of_week}
- 
+                onValueChange={(value) => setFormData({...formData, day_of_week: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {daysOfWeek.map((day) => (
+                    <SelectItem key={day} value={day}>{day}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label>Class Type</Label>
+              <Select
+                value={formData.class_type}
+                onValueChange={(value) => setFormData({...formData, class_type: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {classTypes.map((type) => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Start Time</Label>
+              <Input
+                type="time"
+                required
+                value={formData.start_time}
+                onChange={(e) => setFormData({...formData, start_time: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>End Time</Label>
+              <Input
+                type="time"
+                required
+                value={formData.end_time}
+                onChange={(e) => setFormData({...formData, end_time: e.target.value})}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Building/Block</Label>
+              <Input
+                required
+                value={formData.location_name}
+                onChange={(e) => setFormData({...formData, location_name: e.target.value})}
+                placeholder="e.g., Block A"
+              />
+            </div>
+            <div>
+              <Label>Room Number</Label>
+              <Input
+                required
+                value={formData.room_number}
+                onChange={(e) => setFormData({...formData, room_number: e.target.value})}
+                placeholder="e.g., 301"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label>Instructor</Label>
+            <Input
+              required
+              value={formData.instructor}
+              onChange={(e) => setFormData({...formData, instructor: e.target.value})}
+              placeholder="Professor name"
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1 bg-purple-600 hover:bg-purple-700">
+              {isSubmitting ? "Adding..." : "Add Class"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
