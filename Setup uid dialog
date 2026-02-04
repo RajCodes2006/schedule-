@@ -1,0 +1,72 @@
+import React, { useState, useEffect } from "react";
+import { User } from "@/entities/User";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { IdCard, AlertCircle } from "lucide-react";
+
+export default function SetupUIDDialog({ onClose, onSuccess }) {
+  const [uid, setUid] = useState("");
+  const [currentUID, setCurrentUID] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    loadCurrentUID();
+  }, []);
+
+  const loadCurrentUID = async () => {
+    try {
+      const user = await User.me();
+      if (user.student_uid) {
+        setCurrentUID(user.student_uid);
+        setUid(user.student_uid);
+      }
+    } catch (error) {
+      console.error("Error loading current UID:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!uid.trim()) {
+      setError("Please enter a valid UID");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await User.updateMyUserData({ student_uid: uid.trim() });
+      onSuccess();
+    } catch (error) {
+      console.error("Error updating UID:", error);
+      setError("Failed to update UID. Please try again.");
+    }
+
+    setIsSubmitting(false);
+  };
+
+  return (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <IdCard className="w-5 h-5 text-purple-600" />
+            {currentUID ? "Change Student UID" : "Setup Student UID"}
+          </DialogTitle>
+          <DialogDescription>
+            {currentUID 
+              ? "Update your student UID to sync with your timetable" 
+              : "Enter your college student UID to automatically load your schedule"}
+          </DialogDescription>
+ 
